@@ -14,7 +14,7 @@ public class PessimisticLockStockService {
 
     @Transactional
     public void decrease(Long stockId , Long quantity){
-        Stock stock = stockRepository.findByIdWithPessimisticLock(stockId);
+        Stock stock = stockRepository.findStockById(stockId);
         stock.decrease(quantity);
     }
 }
