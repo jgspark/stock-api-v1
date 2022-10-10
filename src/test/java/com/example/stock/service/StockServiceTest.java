@@ -2,46 +2,40 @@ package com.example.stock.service;
 
 import com.example.stock.domain.Stock;
 import com.example.stock.repository.StockRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class StockServiceTest {
 
+    @Autowired
     private StockService stockService;
 
-    @Mock
+    @Autowired
     private StockRepository stockRepository;
 
     @BeforeEach
     void init(){
-        MockitoAnnotations.openMocks(this);
-        stockService = new StockService(stockRepository);
+        Stock stock = new Stock(null , 1L , 100L);
+        stockRepository.saveAndFlush(stock);
+    }
+
+    @AfterEach
+    void after(){
+        stockRepository.deleteAll();
     }
 
     @Test
     void decrease(){
+        stockService.decrease(1L , 1L);
 
-        Optional<Stock> mock = getMock();
+        Stock entity = stockRepository.findById(1L).orElseThrow();
 
-        given(stockRepository.findById(any())).willReturn(mock);
-
-        Stock entity = stockService.decrease(mock.get().getId(), 100L);
-
-        assertEquals(900L , entity.getQuantity());
-    }
-
-    private Optional<Stock> getMock(){
-        return Optional.of(new Stock(1L , 1L , 1000L));
+        assertEquals(entity.getQuantity() , 99L);
     }
 }
