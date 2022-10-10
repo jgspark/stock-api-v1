@@ -25,13 +25,13 @@ class PessimisticLockStockServiceTest {
 
 
     @BeforeEach
-    void init(){
-        Stock stock = new Stock(null , 1L , 100L);
+    void init() {
+        Stock stock = new Stock(null, 1L, 100L);
         stockRepository.saveAndFlush(stock);
     }
 
     @AfterEach
-    public void after(){
+    public void after() {
         stockRepository.deleteAll();
     }
 
@@ -45,11 +45,11 @@ class PessimisticLockStockServiceTest {
 
         CountDownLatch latch = new CountDownLatch(count);
 
-        for (int i = 0 ; i < count ; i++){
-            executorService.execute(() ->{
-                try{
-                    pessimisticLockStockService.decrease(1L , 1L);
-                }finally{
+        for (int i = 0; i < count; i++) {
+            executorService.execute(() -> {
+                try {
+                    pessimisticLockStockService.decrease(1L, 1L);
+                } finally {
                     latch.countDown();
                 }
             });
@@ -59,6 +59,6 @@ class PessimisticLockStockServiceTest {
 
         Stock stock = stockRepository.findById(1L).orElseThrow();
 
-        assertEquals(0L , stock.getQuantity());
+        assertEquals(0L, stock.getQuantity());
     }
 }

@@ -1,20 +1,21 @@
 package com.example.stock.service;
 
-import com.example.stock.domain.Stock;
-import com.example.stock.repository.StockRepository;
+import com.example.stock.domain.OptimisticStock;
+import com.example.stock.repository.OptimisticStockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PessimisticLockStockService {
+public class OptimisticStockService {
 
-    private final StockRepository stockRepository;
+    private final OptimisticStockRepository stockRepository;
 
     @Transactional
     public void decrease(Long stockId, Long quantity) {
-        Stock stock = stockRepository.findStockById(stockId);
+        OptimisticStock stock = stockRepository.findStockById(stockId);
         stock.decrease(quantity);
+        stockRepository.saveAndFlush(stock);
     }
 }

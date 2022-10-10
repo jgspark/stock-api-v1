@@ -5,16 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Stock {
+public class OptimisticStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +21,15 @@ public class Stock {
 
     private Long quantity;
 
+    // Optimistic Lock Version add
+    @Version
+    private Long version;
 
-    public void decrease(Long quantity) {
+    public void decrease(Long quantity){
 
         long currentValue = this.quantity - quantity;
 
-        if (currentValue < 0) {
+        if (currentValue < 0){
             throw new RuntimeException("sale exception");
         }
 
