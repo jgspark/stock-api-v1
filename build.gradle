@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework.data:spring-data-redis:2.7.3'
     implementation 'io.lettuce:lettuce-core:6.2.0.RELEASE'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.7'
 }
 
 tasks.named('test') {
